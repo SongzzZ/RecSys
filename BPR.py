@@ -5,7 +5,7 @@
 @Author: ZhaoSong
 @LastEditors: ZhaoSong
 @Date: 2019-04-10 13:38:23
-@LastEditTime: 2019-04-11 18:25:40
+@LastEditTime: 2019-04-12 11:18:51
 '''
 import pandas as pd 
 import numpy as np
@@ -39,6 +39,7 @@ def get_test(user_count,user_ratings):
     for u, i_list in user_ratings.items(): #dict的keys须是list
         user_test[u] = random.sample(user_ratings[u], 1)[0]
     
+    del i_list
     return user_test
 
 # 处理训练数据,获得训练用的三元组，随机用户、看过的电影、没看过的电影
@@ -54,6 +55,7 @@ def get_trainbatch(user_ratings, user_rating_test,item_count,batch_size = 512):
         while j in user_ratings[u]:
             j = random.randint(1, item_count)
         t.append([u, i, j])
+    del b
     return np.asarray(t)
 # 生成测试集，i是从已评分中随机抽取的集合，j是用户u没评分过的集合
 def get_testbatch(user_ratings, user_rating_test, item_count):
@@ -97,7 +99,12 @@ def bpr_mf(user_count, item_count, hidden_dim):
     train_op = tf.train.GradientDescentOptimizer(0.01).minimize(bprloss)
 
     return u,i,j,mf_auc,bprloss,train_op    
-    
+
+# ListRank MF
+def LTR_MF(records, ratings, user_ratings, item_count):
+    print()
+
+
 with tf.Session() as sess:
     user_count, item_count, user_ratings = data_processor()
     user_ratings_test = get_test(user_count,user_ratings)

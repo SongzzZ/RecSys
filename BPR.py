@@ -5,7 +5,7 @@
 @Author: ZhaoSong
 @LastEditors: ZhaoSong
 @Date: 2019-04-10 13:38:23
-@LastEditTime: 2019-04-12 11:18:51
+@LastEditTime: 2019-04-14 10:01:12
 '''
 import pandas as pd 
 import numpy as np
@@ -71,16 +71,13 @@ def bpr_mf(user_count, item_count, hidden_dim):
     u = tf.placeholder(tf.int32,[None])
     i = tf.placeholder(tf.int32,[None])
     j = tf.placeholder(tf.int32,[None])
+ 
+    user_emb_w = tf.Variable(tf.random_normal([user_count+1,hidden_dim]), name = 'user_emb_w') #W矩阵
+    item_emb_w = tf.Variable(tf.random_normal([item_count+1,hidden_dim]), name = 'item_enb_w') #H矩阵
 
-    with tf.device("/cpu:0"):
-        user_emb_w = tf.get_variable('user_emb_w',[user_count+1,hidden_dim],
-        initializer=tf.random_normal_initializer(0,0.1)) #W矩阵
-        item_emb_w = tf.get_variable('item_enb_w',[item_count+1,hidden_dim],
-        initializer=tf.random_normal_initializer(0,0.1)) #H矩阵
-
-        u_emb = tf.nn.embedding_lookup(user_emb_w, u)
-        i_emb = tf.nn.embedding_lookup(item_emb_w, i)
-        j_emb = tf.nn.embedding_lookup(item_emb_w, j)
+    u_emb = tf.nn.embedding_lookup(user_emb_w, u)
+    i_emb = tf.nn.embedding_lookup(item_emb_w, i)
+    j_emb = tf.nn.embedding_lookup(item_emb_w, j)
     # MF predict: u_i > u_j
     x = tf.reduce_sum(tf.multiply(u_emb, (i_emb - j_emb)), 1, keepdims=True)
     

@@ -5,7 +5,7 @@
 @Author: ZhaoSong
 @LastEditors: ZhaoSong
 @Date: 2019-04-10 13:38:23
-@LastEditTime: 2019-04-14 16:08:11
+@LastEditTime: 2019-04-14 16:50:56
 '''
 import pandas as pd 
 import numpy as np
@@ -72,8 +72,8 @@ def bpr_mf(user_count, item_count, hidden_dim):
     i = tf.placeholder(tf.int32,[None])
     j = tf.placeholder(tf.int32,[None])
  
-    user_emb_w = tf.Variable(tf.random_normal([user_count+1,hidden_dim]), name = 'user_emb_w') #W矩阵
-    item_emb_w = tf.Variable(tf.random_normal([item_count+1,hidden_dim]), name = 'item_enb_w') #H矩阵
+    user_emb_w = tf.Variable(tf.random_normal([user_count+1,hidden_dim],stddev = 0.35), name = 'user_emb_w') #W矩阵
+    item_emb_w = tf.Variable(tf.random_normal([item_count+1,hidden_dim],stddev = 0.35), name = 'item_enb_w') #H矩阵
 
     u_emb = tf.nn.embedding_lookup(user_emb_w, u)
     i_emb = tf.nn.embedding_lookup(item_emb_w, i)
